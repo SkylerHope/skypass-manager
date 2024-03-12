@@ -1,0 +1,11 @@
+{
+  "name": "skypass-manager",
+  "version": "1.0.0",
+  "description": "An easy and safe to use password manager",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron"
+  },
+  "author": "SkylerHope",
+  "license": "MIT"
+}
