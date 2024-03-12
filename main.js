@@ -5,7 +5,7 @@ const createWindow = () => {
   const win = new BrowserWindow({
       width: 800,
       height: 600,
-      icon: path.join(__dirname, 'assets', 'img', 'favicon.ico'),
+      icon: path.join(__dirname, 'assets', 'img', 'favicon.png'),
       webPreferences: {
         contentSecurityPolicy: "script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
       }
