@@ -2,14 +2,14 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
         <link rel="icon" type="image/x-icon" href="/assets/img/favicon.png">
         <link rel="stylesheet" type="text/css" href="./style/pinform.css">
         <title>SkyPass Manager</title>
     </head>
     <body>
         <div>
-            <form id="first-pin-form">
+            <form id="first-pin-form" action="index.html">
                 <label for="first-pin" id="first-pin" name="firstpin">Set your PIN</label><br/>
                 <input type="number" id="pin-input" name="pininput" required minlength="4" maxlength="6"><br/>
                 <label for="verify-pin" id="verify-pin" name="verifypin">Verify the PIN</label><br/>
@@ -19,6 +19,8 @@
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
         <script>
+            const { ipcRenderer } = require('electron');
+
             const firstPinForm = document.getElementById('first-pin-form');
 
             firstPinForm.addEventListener('submit', function(event) {
@@ -27,11 +29,16 @@
 
                 const encryptedPin = CryptoJS.AES.encrypt(pin, 'secret-key').toString();
 
-                const fs = require('fs');
-                fs.writeFile('config.enc', encryptedPin, (err) => {
-                    if (err) throw err;
-                    console.log('PIN Stored Successfully!')
-                });
+                ipcRenderer.send('save-pin', encryptedPin);
+            });
+
+            ipcRenderer.on('pin-save-status', (event, status) => {
+                if(status.success) {
+                    console.log('PIN stored successfully!');
+                }
+                else {
+                    console.log('Error saving pin: ', status.error)
+                }
             });
         </script>
     </body>
