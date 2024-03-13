@@ -18,6 +18,15 @@ body {
     height: 50px;
 }
 
+.new-pass-text {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-top: 5px;
+    margin-bottom: 40px;
+    margin-right: 50px;
+}
+
 .new-pass-button:active {
     background-color: royalblue;
 }
