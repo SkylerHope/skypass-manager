@@ -2,9 +2,41 @@ body {
     background-color: whitesmoke;
 }
 
+#first-form-div {
+    text-align: center;
+}
+
+#lock-image {
+    height: 70px;
+    width: 70px;
+}
+
+#first-pin-text {
+    text-align: center;
+}
+
 #first-pin-form {
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
     width: 30%;
     border-radius: 20px;
-    background-color: thistle;
+    background-color: lightskyblue;
+}
+
+#pin-input {
+    border-radius: 10px;
+    margin-bottom: 10px;
+    height: 30px;
+}
+
+#vpin-input {
+    border-radius: 10px;
+    margin-bottom: 10px;
+    height: 30px;
+}
+
+#submit-pin {
+    margin-bottom: 5px;
+    height: 30px;
 }
