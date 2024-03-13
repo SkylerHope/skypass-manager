@@ -9,13 +9,30 @@
     </head>
     <body>
         <div>
-            <form>
+            <form id="first-pin-form">
                 <label for="first-pin" id="first-pin" name="firstpin">Set your PIN</label><br/>
-                <input type="number" id="pin-input" name="pininput" required><br/>
+                <input type="number" id="pin-input" name="pininput" required minlength="4" maxlength="6"><br/>
                 <label for="verify-pin" id="verify-pin" name="verifypin">Verify the PIN</label><br/>
                 <input type="number" id="vpin-input" name="vpininput" required><br/>
                 <input type="submit" id="submit-pin" value="OK">
             </form>
         </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+        <script>
+            const firstPinForm = document.getElementById('first-pin-form');
+
+            firstPinForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const pin = document.getElementById('pin-input').value;
+
+                const encryptedPin = CryptoJS.AES.encrypt(pin, 'secret-key').toString();
+
+                const fs = require('fs');
+                fs.writeFile('config.enc', encryptedPin, (err) => {
+                    if (err) throw err;
+                    console.log('PIN Stored Successfully!')
+                });
+            });
+        </script>
     </body>
 </html>
