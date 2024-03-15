@@ -1,23 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const crypto = require('crypto');
 const fs = require('fs');
-
-const filePath = path.join(app.getPath('userData'), 'config.enc');
-
-ipcMain.on('save-pin', (event, encryptedPin) => {
-  /*const filePath = path.join(app.getPath('userData'), 'config.enc');*/
-
-  fs.writeFile(filePath, encryptedPin, (err) => {
-    if(err) {
-      event.reply('pin-save-status', { success: false, error: err.message});
-    }
-    else {
-      event.reply('pin-save-status', { success: true});
-    }
-  });
-});
-
-/*const PIN_FILE_PATH = path.join(app.getPath('userData'), 'config.enc');*/
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -25,19 +9,39 @@ const createWindow = () => {
       height: 600,
       icon: path.join(__dirname, 'assets', 'img', 'favicon.png'),
       webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
         preload: path.join(__dirname, 'preload.js'),
         contentSecurityPolicy: "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
       }
   });
 
-  if(fs.existsSync(filePath)) {
+  const appDirectory = __dirname;
+  const pinFilePath = path.join(appDirectory, 'config.enc');
+
+  if(fs.existsSync(pinFilePath)) {
     win.loadFile('index.html');
   }
   else {
     win.loadFile('firstrun.html');
   }
-  
-  /*win.loadFile('index.html');*/
+
 };
 
 app.whenReady().then(createWindow)
+
+ipcMain.on('save-pin', (event, pin) => {
+  const algorithm = 'aes-256-cbc';
+  const key = crypto.randomBytes(32);
+  const iv = crypto.randomBytes(16);
+
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
+  let encryptedPin = cipher.update(pin, 'utf8', 'hex');
+  encryptedPin += cipher.final('hex');
+
+  const appDirectory = __dirname;
+  const pinFilePath = path.join(appDirectory, 'config.enc');
+  fs.writeFileSync(pinFilePath, JSON.stringify({ encryptedPin, iv }));
+
+  event.reply('pin-save-status', { success: true });
+});

@@ -18,30 +18,7 @@
                 <input type="number" id="vpin-input" name="vpininput" required><br/>
                 <input type="submit" id="submit-pin" value="OK">
             </form>
+            <script src="renderer.js"></script>
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-        <script>
-            const { ipcRenderer } = window;
-
-            const firstPinForm = document.getElementById('first-pin-form');
-
-            firstPinForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const pin = document.getElementById('pin-input').value;
-
-                const encryptedPin = CryptoJS.AES.encrypt(pin, 'secret-key').toString();
-
-                ipcRenderer.send('save-pin', encryptedPin);
-            });
-
-            /*ipcRenderer.on('pin-save-status', (event, status) => {
-                if(status.success) {
-                    console.log('PIN stored successfully!');
-                }
-                else {
-                    console.log('Error saving pin: ', status.error);
-                }
-            });*/
-        </script>
     </body>
 </html>
