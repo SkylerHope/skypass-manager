@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+        <link rel="icon" type="image/x-icon" href="/assets/img/favicon.png">
+        <link rel="stylesheet" type="text/css" href="./style/pinform.css">
+        <title>SkyPass Manager</title>
+    </head>
+    <body>
+        <div id="first-form-div">
+            <img src="./assets/img/lock.png" id="lock-image" alt="Lock Image"/><br/>
+            <h2 id="first-pin-text"><i>Enter your PIN to unlock the app</i></h2><br/>
+            <form id="first-pin-form">
+                <label for="login-pin" id="login-pin" name="firstpin">Verify your PIN</label><br/>
+                <input type="password" id="pin-input" name="pininput" required minlength="4" maxlength="6"><br/>
+                <p id="pin-error-message" style="display: none; color: red;">Wrong PIN! Try again</p> 
+                <input type="submit" id="submit-pin" value="OK">
+            </form>
+            <script src="renderer.js"></script>
+        </div>
+    </body>
+</html>

@@ -20,7 +20,7 @@ const createWindow = () => {
   const pinFilePath = path.join(appDirectory, 'config.enc');
 
   if(fs.existsSync(pinFilePath)) {
-    win.loadFile('index.html');
+    win.loadFile('login.html');
   }
   else {
     win.loadFile('firstrun.html');

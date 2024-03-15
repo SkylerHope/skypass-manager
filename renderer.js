@@ -1,5 +1,7 @@
 const { ipcRenderer } = require('electron');
 
+let pin;
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('first-pin-form');
     const pinInput = document.getElementById('pin-input');
@@ -9,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const pin = pinInput.value;
+        pin = pinInput.value;
         const vpin = vpinInput.value;
 
         if(pin === vpin) {
@@ -24,9 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
 ipcRenderer.on('pin-save-status', (event, status) => {
     if(status.success) {
         console.log('PIN saved!');
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
     }
     else {
         console.error('Failed to save PIN: ', status.error);
     }
 });
+
+module.exports = pin;
