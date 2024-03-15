@@ -1,18 +1,29 @@
 const { ipcRenderer } = require('electron');
 
-const pinInput = document.getElementById('pin-input');
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('first-pin-form');
+    const pinInput = document.getElementById('pin-input');
+    const vpinInput = document.getElementById('vpin-input');
 
-document.getElementById('first-pin-form').addEventListener('submit', (event) => {
-    event.preventDefault();
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
 
-    const pin = pinInput.value;
+        const pin = pinInput.value;
+        const vpin = vpinInput.value;
 
-    ipcRenderer.send('save-pin', pin);
+        if(pin === vpin) {
+            ipcRenderer.send('save-pin', pin);
+        }
+        else {
+            alert("PINs don't match! Check again");
+        }
+    });
 });
 
 ipcRenderer.on('pin-save-status', (event, status) => {
     if(status.success) {
         console.log('PIN saved!');
+        window.location.href = 'index.html';
     }
     else {
         console.error('Failed to save PIN: ', status.error);
