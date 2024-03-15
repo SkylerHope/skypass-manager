@@ -11,13 +11,13 @@
         <div id="first-form-div">
             <img src="./assets/img/lock.png" id="lock-image" alt="Lock Image"/><br/>
             <h2 id="first-pin-text"><i>Enter your PIN to unlock the app</i></h2><br/>
-            <form id="first-pin-form">
+            <form id="login-pin-form">
                 <label for="login-pin" id="login-pin" name="firstpin">Verify your PIN</label><br/>
-                <input type="password" id="pin-input" name="pininput" required minlength="4" maxlength="6"><br/>
-                <p id="pin-error-message" style="display: none; color: red;">Wrong PIN! Try again</p> 
-                <input type="submit" id="submit-pin" value="OK">
+                <input type="password" id="login-input" name="pininput" required minlength="4" maxlength="6"><br/>
+                <p id="login-error-message" style="display: none; color: red;">Wrong PIN! Try again</p> 
+                <input type="submit" id="submit-login" value="OK">
             </form>
-            <script src="renderer.js"></script>
+            <script src="check.js"></script>
         </div>
     </body>
 </html>
