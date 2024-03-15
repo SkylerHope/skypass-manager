@@ -1,6 +1,6 @@
 {
   "name": "skypass-manager",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "An easy and safe to use password manager",
   "main": "main.js",
   "scripts": {

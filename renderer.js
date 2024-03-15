@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('first-pin-form');
     const pinInput = document.getElementById('pin-input');
     const vpinInput = document.getElementById('vpin-input');
+    const pinError = document.getElementById('pin-error-message');
 
     form.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ipcRenderer.send('save-pin', pin);
         }
         else {
-            alert("PINs don't match! Check again");
+            pinError.style.display = 'block';
         }
     });
 });
