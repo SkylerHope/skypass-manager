@@ -1,4 +1,5 @@
 const { ipcRenderer } = require('electron');
+let { algorithm, key, iv } = require('./main.js');
 
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('login-pin-form');
@@ -10,14 +11,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const pinInput = loginPin.value;
 
-        ipcRenderer.send('verify-pin', pinInput);
+        ipcRenderer.send('verify-pin', {
+            pinInput: pinInput,
+            algorithm: algorithm,
+            key: key,
+            iv: iv
+        });
     });
 });
 
-ipcRenderer.on('pin-verify-result', (event, isPinCorrect) => {
+ipcRenderer.on('pin-verify-result', (isPinCorrect) => {
     if(isPinCorrect) {
         console.log('PIN is correct!');
-        window.location.href('index.html');
+        window.location.href = 'index.html';
     } else {
         console.log('PIN is false!');
     }

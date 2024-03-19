@@ -43,16 +43,30 @@ ipcMain.on('save-pin', (event, pin) => {
 
   const appDirectory = __dirname;
   const pinFilePath = path.join(appDirectory, 'config.enc');
-  fs.writeFileSync(pinFilePath, JSON.stringify({ encryptedPin, iv }));
+  fs.writeFileSync(pinFilePath, JSON.stringify({ encryptedPin: encryptedPin.toString(), iv: iv.toString() }));
 
-  event.reply('pin-save-status', { success: true });
+  event.reply('pin-save-status', { success: true, algorithm, key: key.toString('hex'), iv: iv.toString('hex') });
+
+  module.exports.algorithm = algorithm;
+  module.exports.key = key;
+  module.exports.iv = iv;
 });
 
-ipcMain.on('verify-pin', (event, pinInput) => {
-  const decipher = crypto.createDecipheriv(algorithm, key, iv);
-  let decryptedPin = decipher.update(pinInput, 'hex', 'utf8');
-  decryptedPin += decipher.final('utf8');
+ipcMain.on('verify-pin', (event, pinInput, algorithm, key, iv) => {
 
-  const isPinCorrent = decryptedPin === pinInput;
-  event.reply('pin-verify-result', isPinCorrent);
+  key = Buffer.from(key, 'hex');
+  iv = Buffer.from(iv, 'hex');
+
+  const decipher = crypto.createDecipheriv(algorithm, key, iv);
+  
+  try {
+    let decryptedPin = decipher.update(pinInput, 'hex', 'utf8');
+    decryptedPin += decipher.final('utf8');
+
+    const isPinCorrect = decryptedPin === pinInput;
+    event.reply('pin-verify-result', isPinCorrect);
+  } catch (error) {
+    console.error('Error decrypting PIN: ', error.message);
+    event.reply('pin-verify-result', false);
+  }
 });
