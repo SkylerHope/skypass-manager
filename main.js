@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const crypto = require('crypto');
 const fs = require('fs');
+const decryptPin = require('./check');
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -30,9 +31,11 @@ const createWindow = () => {
 
 app.whenReady().then(createWindow)
 
+let key;
+
 ipcMain.on('save-pin', (event, pin) => {
   const algorithm = 'aes-256-cbc';
-  const key = crypto.randomBytes(32);
+  key = crypto.randomBytes(32);
   const iv = crypto.randomBytes(16);
 
   const cipher = crypto.createCipheriv(algorithm, key, iv);
@@ -45,3 +48,5 @@ ipcMain.on('save-pin', (event, pin) => {
 
   event.reply('pin-save-status', { success: true });
 });
+
+module.exports = key;

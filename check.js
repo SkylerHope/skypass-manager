@@ -1,29 +1,14 @@
-let pin = require('./renderer');
-const { ipcRenderer } = require('electron');
+const crypto = require('crypto');
+let key = require('./main').encryptionKey;
 
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('login-pin-form');
-    const input = document.getElementById('login-input');
-    const loginError = document.getElementById('login-error-message');
-    
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
+module.exports = {
+    verifyPin: function(encryptedPin, iv, userInput) {
+        const algorithm = 'aes-256-cbc';
 
-        const loginInput = input.value;
+        const decipher = crypto.createDecipheriv(algorithm, key, Buffer.from(iv, 'hex'));
+        let decryptedPin = decipher.update(encryptedPin, 'hex', 'utf8');
+        decryptedPin += decipher.final('utf8');
 
-        if(loginInput === pin) {
-            ipcRenderer.send('login-pin', pin);
-        } else {
-            loginError.style.display = 'block';
-        }
-    });
-});
-
-ipcRenderer.on('login-status', (event, status) => {
-    if(status.success) {
-        console.log('Successful login!');
-        window.location.href('index.html');
-    } else {
-        console.error('Failed to log in: ', status.error);
+        return userInput === decryptedPin;
     }
-});
+};
