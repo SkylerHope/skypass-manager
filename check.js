@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-ipcRenderer.on('pin-verify-result', (isPinCorrect) => {
+ipcRenderer.on('pin-verify-status', (event, isPinCorrect) => {
     if(isPinCorrect) {
         console.log('PIN is correct!');
         window.location.href = 'index.html';

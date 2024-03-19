@@ -54,8 +54,8 @@ ipcMain.on('save-pin', (event, pin) => {
 
 ipcMain.on('verify-pin', (event, pinInput, algorithm, key, iv) => {
 
-  key = Buffer.from(key, 'hex');
-  iv = Buffer.from(iv, 'hex');
+  /*key = Buffer.from(key, 'hex');
+  iv = Buffer.from(iv, 'hex');*/
 
   const decipher = crypto.createDecipheriv(algorithm, key, iv);
   
