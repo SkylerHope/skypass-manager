@@ -31,12 +31,12 @@ const createWindow = () => {
 
 app.whenReady().then(createWindow)
 
-let key;
+let algorithm, key, iv;
 
 ipcMain.on('save-pin', (event, pin) => {
-  const algorithm = 'aes-256-cbc';
+  algorithm = 'aes-256-cbc';
   key = crypto.randomBytes(32);
-  const iv = crypto.randomBytes(16);
+  iv = crypto.randomBytes(16);
 
   const cipher = crypto.createCipheriv(algorithm, key, iv);
   let encryptedPin = cipher.update(pin, 'utf8', 'hex');
@@ -49,4 +49,4 @@ ipcMain.on('save-pin', (event, pin) => {
   event.reply('pin-save-status', { success: true });
 });
 
-module.exports = key;
+module.exports = { algorithm, key, iv };
