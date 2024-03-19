@@ -11,12 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const pinInput = loginPin.value;
 
-        ipcRenderer.send('verify-pin', {
-            pinInput: pinInput,
-            algorithm: algorithm,
-            key: key,
-            iv: iv
-        });
+        ipcRenderer.send('verify-pin', pinInput, algorithm, key, iv);
     });
 });
 
