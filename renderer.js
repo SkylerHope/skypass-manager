@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const vpinInput = document.getElementById('vpin-input');
     const pinError = document.getElementById('pin-error-message');
 
+    const loginForm = document.getElementById('login-pin-form');
+    const loginPin = document.getElementById('login-pin');
+    //const loginError = document.getElementById('login-error-message');
+
     form.addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -19,6 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
             pinError.style.display = 'block';
         }
     });
+
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const pinInput = loginPin.value;
+
+        ipcRenderer.send('verify-pin', pinInput);
+    });
 });
 
 ipcRenderer.on('pin-save-status', (event, status) => {
@@ -28,5 +40,14 @@ ipcRenderer.on('pin-save-status', (event, status) => {
     }
     else {
         console.error('Failed to save PIN: ', status.error);
+    }
+});
+
+ipcRenderer.on('pin-verify-result', (event, isPinCorrect) => {
+    if(isPinCorrect) {
+        console.log('PIN is correct!');
+        window.location.href('index.html');
+    } else {
+        console.log('PIN is false!');
     }
 });

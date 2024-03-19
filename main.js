@@ -2,7 +2,6 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const crypto = require('crypto');
 const fs = require('fs');
-const decryptPin = require('./check');
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -49,4 +48,11 @@ ipcMain.on('save-pin', (event, pin) => {
   event.reply('pin-save-status', { success: true });
 });
 
-module.exports = { algorithm, key, iv };
+ipcMain.on('verify-pin', (event, pinInput) => {
+  const decipher = crypto.createDecipheriv(algorithm, key, iv);
+  let decryptedPin = decipher.update(pinInput, 'hex', 'utf8');
+  decryptedPin += decipher.final('utf8');
+
+  const isPinCorrent = decryptedPin === pinInput;
+  event.reply('pin-verify-result', isPinCorrent);
+});
