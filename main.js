@@ -28,7 +28,7 @@ const createWindow = () => {
 
 };
 
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);
 
 let algorithm, key, iv;
 
