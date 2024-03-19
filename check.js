@@ -9,7 +9,24 @@ document.addEventListener('DOMContentLoaded', function() {
     loginForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const decipher = crypto.createDecipheriv(algorithm, key, iv);
-        let decryptedPin = decipher.update()
-    })
-})
+        const pinInput = loginPin.value;
+
+        const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
+        
+        try {
+            let decryptedPin = decipher.update(pinInput, 'hex', 'utf8');
+            decryptedPin += decipher.final('utf8');
+
+            if(pinInput === decryptedPin) {
+                console.log('PIN is correct!');
+                window.location.href('index.html');
+            } else {
+                console.log('PIN is false!');
+                loginError.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error decrypting PIN: ', error.message);
+            loginError.style.display = 'block';
+        }
+    });
+});
