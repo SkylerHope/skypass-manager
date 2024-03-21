@@ -17,17 +17,17 @@ document.addEventListener('DOMContentLoaded', function() {
     loginForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
+        let decipher = crypto.createDecipheriv(algorithm, key, ivHex);
+
+        let decryptedPin = decipher.update(encryptedPin, 'hex', 'utf8');
+    
+        if (decryptedPin.toString() === loginPin.value) {
+            console.log('PIN correct!');
+            window.location.href = 'index.html';
+        } else {
+            console.log('PIN false!');
+        }
+
         ipcRenderer.send('check-pin', loginPin.value);
     });
-
-    let decipher = crypto.createDecipheriv(algorithm, key, ivHex);
-
-    let decryptedPin = decipher.update(encryptedPin, 'hex', 'utf8');
-
-    if (decryptedPin.toString() === loginPin.value) {
-        console.log('PIN correct!');
-        window.location.href = 'index.html';
-    } else {
-        console.log('PIN false!');
-    }
 });
