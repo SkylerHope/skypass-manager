@@ -1,33 +1,23 @@
-const { ipcRenderer } = require('electron');
-const crypto = require('crypto');
 const fs = require('fs');
+const crypto = require('crypto');
 
-let algorithm = 'aes-256-cbc';
-let data = fs.readFileSync('config.enc');
-let key = data.slice(32);
-let iv = data.slice(16);
-let encryptedPin = data.slice(48);
+const loginPin = document.getElementById('login-input');
 
-let ivHex = iv.toString('hex');
+const encryptedPin = fs.readFileSync('config.enc', 'utf8');
 
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('login-pin-form');
-    const loginPin = document.getElementById('login-input');
+const iv = fs.readFileSync('config.enc', 'utf8').substring(0, 16);
 
-    loginForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+const encryptionKey = fs.readFileSync('config.enc', 'utf8').substring(0, 32);
 
-        let decipher = crypto.createDecipheriv(algorithm, key, ivHex);
+const algorithm = 'aes-256-cbc';
 
-        let decryptedPin = decipher.update(encryptedPin, 'hex', 'utf8');
-    
-        if (decryptedPin.toString() === loginPin.value) {
-            console.log('PIN correct!');
-            window.location.href = 'index.html';
-        } else {
-            console.log('PIN false!');
-        }
+const decipher = crypto.createDecipheriv(algorithm, encryptionKey, iv);
+let decryptedPin = decipher.update(encryptedPin, 'utf8', 'utf8');
+decryptedPin += decipher.final('utf8');
 
-        ipcRenderer.send('check-pin', loginPin.value);
-    });
-});
+if (decryptedPin === loginPin.value) {
+    window.location.href = 'index.html';
+} else {
+    const errorText = document.getElementById('login-error-message');
+    errorText.style.display = 'block';
+}
