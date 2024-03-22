@@ -41,7 +41,7 @@ ipcMain.on('save-pin', (event, pin) => {
 
   const appDirectory = __dirname;
   const pinFilePath = path.join(appDirectory, 'config.enc');
-  fs.writeFileSync(pinFilePath, JSON.stringify({ encryptedPin: encryptedPin.toString(), iv: iv.toString() }));
+  fs.writeFileSync(pinFilePath, JSON.stringify({ encryptedPin: encryptedPin.toString('hex'), iv: iv.toString('hex') }));
 
   event.reply('pin-save-status', { success: true, algorithm, key: key.toString('hex'), iv: iv.toString('hex') });
 });
