@@ -12,8 +12,8 @@ loginForm.addEventListener('submit', function(event) {
     let key2 = Buffer.from(parsedData.key, 'hex');
 
     let decipher = crypto.createDecipheriv('aes-256-cbc', key2, iv2);
-    let decryptedPin = decipher.update(parsedData.encryptedPin, 'hex', 'hex');
-    decryptedPin += decipher.final('hex');
+    let decryptedPin = decipher.update(parsedData.encryptedPin, 'hex', 'utf8');
+    decryptedPin += decipher.final('utf8');
 
     if (decryptedPin === loginPin.value) {
         window.location.href = 'index.html';
