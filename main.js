@@ -36,12 +36,12 @@ ipcMain.on('save-pin', (event, pin) => {
   const iv = crypto.randomBytes(16);
 
   const cipher = crypto.createCipheriv(algorithm, key, iv);
-  let encryptedPin = cipher.update(pin, 'utf8', 'hex');
+  let encryptedPin = cipher.update(pin, 'utf8', 'hex', 'hex');
   encryptedPin += cipher.final('hex');
 
   const appDirectory = __dirname;
   const pinFilePath = path.join(appDirectory, 'config.enc');
-  fs.writeFileSync(pinFilePath, JSON.stringify({ encryptedPin: encryptedPin.toString('hex'), iv: iv.toString('hex') }));
+  fs.writeFileSync(pinFilePath, JSON.stringify({ encryptedPin: encryptedPin.toString('hex'), iv: iv.toString('hex'), key: key.toString('hex') }));
 
   event.reply('pin-save-status', { success: true, algorithm, key: key.toString('hex'), iv: iv.toString('hex') });
 });
