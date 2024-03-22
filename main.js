@@ -32,16 +32,16 @@ app.whenReady().then(createWindow);
 
 ipcMain.on('save-pin', (event, pin) => {
   const algorithm = 'aes-256-cbc';
-  const key = crypto.randomBytes(32);
-  const iv = crypto.randomBytes(16);
+  let key = crypto.randomBytes(32);
+  let iv1 = crypto.randomBytes(16);
 
-  const cipher = crypto.createCipheriv(algorithm, key, iv);
+  const cipher = crypto.createCipheriv(algorithm, key, iv1);
   let encryptedPin = cipher.update(pin, 'utf8', 'hex', 'hex');
   encryptedPin += cipher.final('hex');
 
   const appDirectory = __dirname;
   const pinFilePath = path.join(appDirectory, 'config.enc');
-  fs.writeFileSync(pinFilePath, JSON.stringify({ encryptedPin: encryptedPin.toString('hex'), iv: iv.toString('hex'), key: key.toString('hex') }));
+  fs.writeFileSync(pinFilePath, JSON.stringify({ encryptedPin: encryptedPin.toString('hex'), iv: iv1.toString('hex'), key: key.toString('hex') }));
 
-  event.reply('pin-save-status', { success: true, algorithm, key: key.toString('hex'), iv: iv.toString('hex') });
+  event.reply('pin-save-status', { success: true, algorithm, key: key.toString('hex'), iv: iv1.toString('hex') });
 });

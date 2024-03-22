@@ -3,14 +3,14 @@ const crypto = require('crypto');
 
 const loginPin = document.getElementById('login-input');
 
-const encryptedPin = fs.readFileSync('config.enc', 'utf8');
+let encryptedPin = fs.readFileSync('config.enc', 'utf8');
 
 const algorithm = 'aes-256-cbc';
 
-const iv = fs.readFileSync('config.enc', 'utf8').substring(0, 16);
-const key = fs.readFileSync('config.enc', 'utf8').substring(0, 32); 
+let iv2 = fs.readFileSync('config.enc', 'utf8').substring(0, 16);
+let key = fs.readFileSync('config.enc', 'utf8').substring(0, 32);
 
-const decipher = crypto.createDecipheriv(algorithm, Buffer.from (key, 'hex'), Buffer.from(iv, 'hex'));
+const decipher = crypto.createDecipheriv(algorithm, Buffer.from (key, 'hex'), Buffer.from(iv2, 'hex'));
 let decryptedPin = decipher.update(encryptedPin, 'hex', 'utf8'); 
 decryptedPin += decipher.final('utf8');
 
