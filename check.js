@@ -1,22 +1,24 @@
 const fs = require('fs');
 const crypto = require('crypto');
-
+const loginForm = document.getElementById('login-pin-form');
 const loginPin = document.getElementById('login-input');
 
-let encryptedPin = fs.readFileSync('config.enc', 'utf8');
+loginForm.addEventListener('submit', function(event) {
+    event.preventDefault();
 
-const algorithm = 'aes-256-cbc';
+    let data = fs.readFileSync('config.enc', 'utf8');
+    let parsedData = JSON.parse(data);
+    let iv2 = Buffer.from(parsedData.iv, 'hex');
+    let key2 = Buffer.from(parsedData.key, 'hex');
 
-let iv2 = fs.readFileSync('config.enc', 'utf8').substring(0, 16);
-let key2 = fs.readFileSync('config.enc', 'utf8').substring(0, 32);
+    let decipher = crypto.createDecipheriv('aes-256-cbc', key2, iv2);
+    let decryptedPin = decipher.update(parsedData.encryptedPin, 'hex', 'hex');
+    decryptedPin += decipher.final('hex');
 
-const decipher = crypto.createDecipheriv(algorithm, Buffer.from (key2, 'hex'), Buffer.from(iv2, 'hex'));
-let decryptedPin = decipher.update(encryptedPin, 'hex', 'utf8'); 
-decryptedPin += decipher.final('utf8');
-
-if (decryptedPin === loginPin.value) {
-    window.location.href = 'index.html';
-} else {
-    const errorText = document.getElementById('login-error-message');
-    errorText.style.display = 'block';
-}
+    if (decryptedPin === loginPin.value) {
+        window.location.href = 'index.html';
+    } else {
+        const errorText = document.getElementById('login-error-message');
+        errorText.style.display = 'block';
+    }
+});
