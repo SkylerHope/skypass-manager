@@ -28,7 +28,7 @@ Close the app, open the terminal and type:
 When the highlighted path appears, press CTRL+C and then type:
 
 ```bash
-  rm /path-to-directory/skypas-manager/config.enc
+  rm /path-to-directory/skypass-manager/config.enc
 ```
 
 **WARNING: Don't touch the path that includes the *.config* directory**
